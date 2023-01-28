@@ -1,4 +1,4 @@
-# Dynatype
+# Typadyne
 
 Dynamic typed JS runtime concept for NodeJS apps.
 

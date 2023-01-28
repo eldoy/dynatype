@@ -1,5 +1,5 @@
 {
-  "name": "dynatype",
+  "name": "typadyne",
   "version": "0.1.0",
   "description": "Dynamic typed JS runtime concept for NodeJS apps",
   "main": "index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eldoy/dynatype.git"
+    "url": "git+https://github.com/eldoy/typadyne.git"
   },
   "author": "Vidar Eldøy <vidar@eldoy.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eldoy/dynatype/issues"
+    "url": "https://github.com/eldoy/typadyne/issues"
   },
-  "homepage": "https://github.com/eldoy/dynatype#readme"
+  "homepage": "https://github.com/eldoy/typadyne#readme"
 }
