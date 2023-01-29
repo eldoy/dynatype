@@ -1,11 +1,9 @@
 const assert = require('assert')
-
 const fun = require('../index.js')
 
 async function main() {
   // Test empty function
   let result = fun(() => {
-    console.log('hello')
     return 'hello'
   })
   assert.deepEqual(result, 'hello')
@@ -22,7 +20,7 @@ async function main() {
   })
   assert.deepEqual(result, 'ab')
 
-  // Test empty function with wrong return value
+  // Test function with wrong return value
   let err
   try {
     result = fun(
@@ -34,7 +32,33 @@ async function main() {
       'email'
     )
   } catch (e) {
-    console.log(e.message)
+    err = e.message
+  }
+  assert.deepEqual(err, `return value is not email`)
+
+  // Test function with correct return value
+  result = fun(
+    { string: 'a' },
+    { string: 'b' },
+    (a, b) => {
+      return a + b
+    },
+    'string'
+  )
+  assert.deepEqual(result, 'ab')
+
+  // Test async function with wrong return value
+  err = null
+  try {
+    result = await fun(
+      { string: 'a' },
+      { string: 'b' },
+      async (a, b) => {
+        return a + b
+      },
+      'email'
+    )
+  } catch (e) {
     err = e.message
   }
   assert.deepEqual(err, `return value is not email`)

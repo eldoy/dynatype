@@ -20,8 +20,6 @@ if (fs.existsSync(typedir)) {
     })
 }
 
-console.log(TYPEDEFS)
-
 // Usage:
 // fun({ string: 'Vidar' }, { string: 'Eldøy' }, (firstname, lastname) => {
 //   return firstname + lastname
@@ -42,11 +40,10 @@ function fun(...args) {
     }
   }
 
-  console.log({ schemas, fn })
   if (!fn) {
     throw new Error(`callback function missing`)
   }
-  console.log(schemas)
+
   for (const schema of schemas) {
     for (const key in schema) {
       const value = schema[key]
@@ -71,17 +68,23 @@ function fun(...args) {
   const params = schemas.map(function (schema) {
     return Object.values(schema)[0]
   })
-  console.log({ params })
-  console.log(fn)
-  const result = fn(...params)
 
-  if (ret) {
+  const checkret = (val) => {
+    if (!ret) return
     const type = TYPEDEFS[ret]
-    if (!type(result)) {
+    if (!type(val)) {
       throw new Error(`return value is not ${ret}`)
     }
   }
 
+  const result = fn(...params)
+  if (typeof result.then == 'function') {
+    return new Promise(function (resolve, reject) {
+      result.then((val) => checkret(val) && resolve(val)).catch(reject)
+    })
+  } else {
+    checkret(result)
+  }
   return result
 }
 
