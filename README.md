@@ -15,7 +15,7 @@ npm i typadyne
 
 ### Usage
 
-Start NodeJS with typadyne pre-required:
+Start NodeJS with typadyne pre-required globally:
 ```
 # If path is set up for global packages
 node -r typadyne
