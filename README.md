@@ -17,7 +17,11 @@ npm i typadyne
 
 Start NodeJS with typadyne pre-required:
 ```
+# If path is set up for global packages
 node -r typadyne
+
+# Try this to set path manually
+node -r `npm root -g`/typadyne
 ```
 
 Expose the typadyne `fun`-function manually:
