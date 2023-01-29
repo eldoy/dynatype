@@ -1,5 +1,78 @@
 # Typadyne
 
-Dynamic typed JS runtime concept for NodeJS apps.
+Dynamic typed JS runtime concept for NodeJS apps:
+
+- Check types during runtime
+- Extremely flexible types that are programmable
+- No transpiling, no weird languages, just normal Javascript
+- Supports function parameters and return types
+
+### Install
+
+```
+npm i typadyne
+```
+
+### Usage
+
+Start NodeJS with typadyne pre-required:
+```
+node -r typadyne
+```
+
+Expose the typadyne `fun`-function manually:
+```js
+require('typadyne')
+```
+
+### Types
+
+Currently, since this is just a concept, the only built in type is `string`. Add your own types in the `./types` directory. Types are just functions that receive the value and returns `true` if the value is the correct type:
+
+Example for number, in `./types/number.type.js`:
+
+```js
+// Example type definition
+module.exports = function (val) {
+  return typeof val == 'number'
+}
+```
+
+This makes it possible to add any kind of type, even very complex ones using JSON schema or d8a validations.
+
+Here's an example of an `email` type:
+```js
+module.exports = function (val) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)
+}
+```
+
+The types can even share code, and switch based on data during runtime. Flexible, isn't it?
+
+### Typed Javascript
+
+After `require('typadyne')` the `fun`-function is available. It's just a wrapper for a normal function that does type checking for you.
+
+```js
+// Normal function with typed parameters which returns a string
+var name = fun(
+  { string: 'Vidar' },
+  { string: 'Eldøy' },
+  (firstname, lastname) => {
+    return firstname + ' ' + lastname
+  },
+  'string'
+)
+
+// Async function, returns a custom type 'email'
+var emailAddress = await async fun(
+  { string: 'vidar' },
+  { domain: 'eldoy.com' },
+  async (name, domain) => {
+    return `${name}@${domain}`
+  },
+  'email'
+)
+```
 
 ISC licensed. Enjoy!
