@@ -55,9 +55,17 @@ The types can even share code, and switch based on data during runtime. Flexible
 
 ### Typed Javascript
 
-After `require('typadyne')` the `fun`-function is available. It's just a wrapper for a normal function that does type checking for you.
+After `require('typadyne')` the `fun`-function is available in the gobal scope. It's just a wrapper for a normal function that does type checking for you.
 
 ```js
+// Useless, but works without parameters or return types
+var result = fun(() => { return 'hello' })
+
+// Without return type (if you don't care)
+var pow = fun({ number: 6 }, (n) => {
+  return n * n
+})
+
 // Normal function with typed parameters which returns a string
 var name = fun(
   { string: 'Vidar' },
