@@ -66,6 +66,12 @@ var pow = fun({ number: 6 }, (n) => {
   return n * n
 })
 
+// Using variables
+var num = -4
+var abs = fun({ number: num }, (n) => {
+  return Math.abs(n)
+})
+
 // Normal function with typed parameters which returns a string
 var name = fun(
   { string: 'Vidar' },
@@ -76,8 +82,8 @@ var name = fun(
   'string'
 )
 
-// Async function, returns a custom type 'email'
-var emailAddress = await async fun(
+// Use await with async function, returns a custom type 'email'
+var emailAddress = await fun(
   { string: 'vidar' },
   { domain: 'eldoy.com' },
   async (name, domain) => {
