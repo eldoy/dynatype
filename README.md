@@ -1,6 +1,6 @@
 # Typadyne
 
-Dynamic typed JS runtime concept for NodeJS and browser apps:
+Dynamic typed Javascript runtime concept:
 
 - Check types during runtime
 - Extremely flexible types that are programmable
