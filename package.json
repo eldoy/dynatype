@@ -4,14 +4,14 @@
   "description": "Dynamic typed JS runtime concept for NodeJS apps",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon test/typadyne.test.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eldoy/typadyne.git"
   },
   "author": "Vidar Eldøy <vidar@eldoy.com>",
-  "license": "ISC",
+  "license": "WTFPL",
   "bugs": {
     "url": "https://github.com/eldoy/typadyne/issues"
   },

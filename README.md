@@ -93,4 +93,28 @@ var emailAddress = await fun(
 )
 ```
 
-ISC licensed. Enjoy!
+### Notes
+
+You could possibly also create an "error free" Javascript alternative like Golang has:
+
+```go
+f, err := os.Open("filename.ext")
+if err != nil {
+    log.Fatal(err)
+}
+// do something with f
+```
+
+becomes this with Javascript:
+
+```js
+let [f, err] = await fun(() => {})
+if (err != nil)
+  return console.log(err)
+}
+// do something with f
+```
+
+Could this be extended to include predefined error messages in ./errors/something.err.js?
+
+WTFPL licensed. Enjoy!

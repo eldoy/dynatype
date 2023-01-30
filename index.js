@@ -69,7 +69,7 @@ function fun(...args) {
     return Object.values(schema)[0]
   })
 
-  const checkret = (val) => {
+  const invalidReturnType = (val) => {
     if (!ret) return
     const type = TYPEDEFS[ret]
     if (!type(val)) {
@@ -80,10 +80,10 @@ function fun(...args) {
   const result = fn(...params)
   if (typeof result.then == 'function') {
     return new Promise(function (resolve, reject) {
-      result.then((val) => checkret(val) && resolve(val)).catch(reject)
+      result.then((val) => invalidReturnType(val) || resolve(val)).catch(reject)
     })
   } else {
-    checkret(result)
+    invalidReturnType(result)
   }
   return result
 }

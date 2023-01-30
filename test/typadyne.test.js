@@ -62,6 +62,8 @@ async function main() {
     err = e.message
   }
   assert.deepEqual(err, `return value is not email`)
+
+  console.log('All tests passed!')
 }
 
 main()
