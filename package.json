@@ -1,6 +1,6 @@
 {
   "name": "typadyne",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Dynamic typed JS runtime concept for NodeJS apps",
   "main": "index.js",
   "scripts": {
