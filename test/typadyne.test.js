@@ -1,67 +1,73 @@
 const assert = require('assert')
-const fun = require('../index.js')
+require('../index.js')
 
 async function main() {
   // Test empty function
-  let result = fun(() => {
+  let fn = fun(() => {
     return 'hello'
   })
+  let result = fn()
   assert.deepEqual(result, 'hello')
 
-  // Test empty async function
-  result = await fun(async () => {
-    return 'hi'
-  })
-  assert.deepEqual(result, 'hi')
-
   // Test typed function
-  result = fun({ string: 'a' }, { string: 'b' }, (a, b) => {
+  fn = fun('string', 'string', (a, b) => {
     return a + b
   })
+  result = fn('a', 'b')
   assert.deepEqual(result, 'ab')
 
   // Test function with wrong return value
-  let err
+  let message
   try {
-    result = fun(
-      { string: 'a' },
-      { string: 'b' },
+    fn = fun(
+      'string',
+      'string',
       (a, b) => {
         return a + b
       },
-      'email'
+      'number'
     )
+    result = fn('a', 'b')
   } catch (e) {
-    err = e.message
+    message = e.message
   }
-  assert.deepEqual(err, `return value is not email`)
+  assert.deepEqual(message, `invalid return type: string`)
 
   // Test function with correct return value
-  result = fun(
-    { string: 'a' },
-    { string: 'b' },
+  fn = fun(
+    'string',
+    'string',
     (a, b) => {
       return a + b
     },
     'string'
   )
+  result = fn('a', 'b')
   assert.deepEqual(result, 'ab')
 
+  // Test empty async function
+  fn = fun(async () => {
+    return 'hi'
+  })
+  result = await fn()
+  assert.deepEqual(result, 'hi')
+
   // Test async function with wrong return value
-  err = null
+  message = null
   try {
-    result = await fun(
-      { string: 'a' },
-      { string: 'b' },
+    fn = fun(
+      'string',
+      'string',
       async (a, b) => {
         return a + b
       },
-      'email'
+      'number'
     )
+    result = await fn('a', 'b')
   } catch (e) {
-    err = e.message
+    message = e.message
   }
-  assert.deepEqual(err, `return value is not email`)
+  assert.deepEqual(message, `invalid return type: string`)
 }
 
 main()

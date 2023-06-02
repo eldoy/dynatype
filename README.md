@@ -31,13 +31,13 @@ require('typadyne')
 
 ### Types
 
-Currently, since this is just a concept, the only built in type is `string`. Add your own types in the `./types` directory. Types are just functions that receive the value and returns `true` if the value is the correct type:
+Currently, since this is just a concept, the only built in types are `string` and `number`. Add your own types in the `global.types` object. Types are just functions that receive the value and returns `true` if the value is the correct type:
 
-Example for number, in `./types/number.type.js`:
+Example for number:
 
 ```js
 // Example type definition
-module.exports = function (val) {
+global.types.number = function (val) {
   return typeof val == 'number'
 }
 ```
@@ -46,7 +46,7 @@ This makes it possible to add any kind of type, even very complex ones using JSO
 
 Here's an example of an `email` type:
 ```js
-module.exports = function (val) {
+global.types.email = function (val) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)
 }
 ```
@@ -55,42 +55,49 @@ The types can even share code, and switch based on data during runtime. Flexible
 
 ### Typed Javascript
 
-After `require('typadyne')` the `fun`-function is available in the gobal scope. It's just a wrapper for a normal function that does type checking for you.
+After `require('typadyne')` the `fun`-function is available in the gobal scope. It's just a wrapper for a normal function that sets up type checking for you.
+
+It checks:
+
+- correct number of arguments
+- that all types are valid (defined)
+- correct type for each function argument
+- valid return type
+
+An error is thrown when one of these checks kicks in.
 
 ```js
 // Useless, but works without parameters or return types
-var result = fun(() => { return 'hello' })
+var hello = fun(() => { return 'hello' })
+hello() // => 'hello'
 
 // Without return type (if you don't care)
-var pow = fun({ number: 6 }, (n) => {
+var pow = fun('number', (n) => {
   return n * n
 })
-
-// Using variables
-var num = -4
-var abs = fun({ number: num }, (n) => {
-  return Math.abs(n)
-})
+pow(2) // => 4
 
 // Normal function with typed parameters which returns a string
 var name = fun(
-  { string: 'Vidar' },
-  { string: 'Eldøy' },
+  'string',
+  'string',
   (firstname, lastname) => {
     return firstname + ' ' + lastname
   },
   'string'
 )
+name('Vidar', 'Eldøy') // => 'Vidar Eldøy'
 
 // Use await with async function, returns a custom type 'email'
-var emailAddress = await fun(
-  { string: 'vidar' },
-  { domain: 'eldoy.com' },
+var getEmailAddress = fun(
+  'string',
+  'domain',
   async (name, domain) => {
     return `${name}@${domain}`
   },
   'email'
 )
+await getEmailAddres('vidar', 'eldoy.com') // => 'vidar@eldoy.com
 ```
 
-ISC licensed. Enjoy!
+WTFPL licensed. Enjoy!

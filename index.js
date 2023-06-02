@@ -1,92 +1,46 @@
-const fs = require('fs')
-const path = require('path')
-
-// Built in type definitions
-const TYPEDEFS = require('./lib/types/index.js')
-
-// User defined type definitions in 'types' dir
-const ROOT = process.cwd()
-const typedir = path.join(ROOT, 'types')
-if (fs.existsSync(typedir)) {
-  fs.readdirSync(typedir)
-    .map(function (file) {
-      return path.join(typedir, file)
-    })
-    .forEach(function (file) {
-      const type = require(file)
-      const name = path.basename(file).split('.')[0]
-      const def = type.name || name
-      TYPEDEFS[def] = type
-    })
+global.types = {
+  string: (val) => typeof val == 'string',
+  number: (val) => typeof val == 'number'
 }
 
-// Usage:
-// fun({ string: 'Vidar' }, { string: 'Eldøy' }, (firstname, lastname) => {
-//   return firstname + lastname
-// })
-
-function fun(...args) {
-  let schemas = [],
-    fn,
-    ret
-  for (let i = 0; i < args.length; i++) {
-    let v = args[i]
-    if (typeof v == 'object') {
-      schemas.push(v)
-    } else if (typeof v == 'function') {
-      fn = v
-      ret = args[i + 1]
-      break
+global.fun = function (...args) {
+  let $ = { types: [] }
+  let i = 0
+  while (typeof args[i] == 'string') {
+    let fn = (global.types || {})[args[i]]
+    if (typeof fn != 'function') {
+      throw new Error(`unknown type: ${args[i]}`)
     }
+    $.types.push(args[i++])
+  }
+  $.fn = args[i++]
+  $.ret = args[i]
+
+  function gate(val) {
+    if ($.ret && typeof val != $.ret) {
+      throw new Error(`invalid return type: ${typeof val}`)
+    }
+    return val
   }
 
-  if (!fn) {
-    throw new Error(`callback function missing`)
-  }
-
-  for (const schema of schemas) {
-    for (const key in schema) {
-      const value = schema[key]
-      const type = TYPEDEFS[key]
-      if (typeof type != 'function') {
-        throw new Error(`argument type ${key} does not exist`)
-      }
-      const ok = type(value)
-      if (!ok) {
-        throw new Error(`value is not of type '${key}'`)
+  return function (...args) {
+    if ($.types.length != args.length) {
+      throw new Error('wrong number of arguments')
+    }
+    for (let j = 0; j < $.types.length; j++) {
+      let want = $.types[j]
+      let got = typeof args[j]
+      if (want != got) {
+        throw new Error(`argument ${j + 1}: expected ${want}, got ${got}`)
       }
     }
-  }
 
-  if (ret) {
-    const type = TYPEDEFS[ret]
-    if (typeof type != 'function') {
-      throw new Error(`return type ${ret} does not exist`)
+    let result = $.fn(...args)
+    if (typeof result.then == 'function') {
+      return new Promise(function (resolve, reject) {
+        result.then((val) => resolve(gate(val))).catch(reject)
+      })
     }
+    return gate(result)
   }
-
-  const params = schemas.map(function (schema) {
-    return Object.values(schema)[0]
-  })
-
-  const checkret = (val) => {
-    if (!ret) return
-    const type = TYPEDEFS[ret]
-    if (!type(val)) {
-      throw new Error(`return value is not ${ret}`)
-    }
-  }
-
-  const result = fn(...params)
-  if (typeof result.then == 'function') {
-    return new Promise(function (resolve, reject) {
-      result.then((val) => checkret(val) && resolve(val)).catch(reject)
-    })
-  } else {
-    checkret(result)
-  }
-  return result
 }
-
-global.fun = fun
-module.exports = fun
