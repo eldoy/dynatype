@@ -1,6 +1,6 @@
 # Typadyne
 
-Dynamic typed JS runtime concept for NodeJS apps:
+Dynamic typed Javascript runtime concept:
 
 - Check types during runtime
 - Extremely flexible types that are programmable
@@ -99,5 +99,29 @@ var getEmailAddress = fun(
 )
 await getEmailAddres('vidar', 'eldoy.com') // => 'vidar@eldoy.com
 ```
+
+### Notes
+
+You could possibly also create an "error free" Javascript alternative like Golang has:
+
+```go
+f, err := os.Open("filename.ext")
+if err != nil {
+    log.Fatal(err)
+}
+// do something with f
+```
+
+becomes this with Javascript:
+
+```js
+let [f, err] = await fun(() => {})
+if (err != nil)
+  return console.log(err)
+}
+// do something with f
+```
+
+Could this be extended to include predefined error messages in ./errors/something.err.js?
 
 WTFPL licensed. Enjoy!
