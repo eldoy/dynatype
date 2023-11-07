@@ -97,7 +97,7 @@ var getEmailAddress = fun(
   },
   'email'
 )
-await getEmailAddres('vidar', 'eldoy.com') // => 'vidar@eldoy.com
+await getEmailAddress('vidar', 'eldoy.com') // => 'vidar@eldoy.com
 ```
 
 ### Notes
